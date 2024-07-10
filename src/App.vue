@@ -1,9 +1,13 @@
-<script setup>
-import HomeView from './views/HomeView.vue'
-</script>
-
 <template>
-  <header>
-    <HomeView />
-  </header>
+  <v-app>
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+  </v-app>
 </template>
+
+<script>
+export default {
+  name: 'App',
+}
+</script>
