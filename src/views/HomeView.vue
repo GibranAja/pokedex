@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0" style="max-width: 1200px; margin: 0 auto">
-    <SearchBar @search="searchPokemon"></SearchBar>
+    <SearchBar class="d-flex justify-center mt-5" @search="searchPokemon"></SearchBar>
     <PokemonGrid :pokemons="filteredPokemons"></PokemonGrid>
   </v-container>
 </template>
@@ -14,7 +14,7 @@ const pokemons = ref([])
 const searchQuery = ref('')
 
 const fetchPokemons = async () => {
-  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=300')
+  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000')
   const data = await response.json()
   pokemons.value = await Promise.all(
     data.results.map(async (pokemon) => {
