@@ -1,23 +1,26 @@
 <template>
   <v-card
-  :color="getTypeColor(pokemon.types[0].type.name)"
-  @click="router.push(`/pokemon/${PokemonDetail.id}`)"
-  class="ma-2"
-  elevation="2"
-  height="100%"
+    v-if="pokemon"
+    :color="getTypeColor(pokemon.types[0]?.type.name)"
+    @click="$router.push(`/pokemon/${pokemon.id}`)"
+    class="ma-2"
+    elevation="2"
+    height="100%"
   >
     <v-img :src="pokemon.sprites.front_default" height="150"></v-img>
     <v-card-title>{{ pokemon.name }}</v-card-title>
-    <v-card-subtitle class="text-center">{{ pokemon.id.toString().padStart(3, '0') }}</v-card-subtitle>
+    <v-card-subtitle class="text-center">#{{ pokemon.id.toString().padStart(3, '0') }}</v-card-subtitle>
   </v-card>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
+import { useRouter } from 'vue-router';
 
-defineProps(['pokemon'])
+defineProps(['pokemon']);
+useRouter();
 
-const typeColor = {
+const typeColors = {
   normal: '#A8A878',
   fire: '#F08030',
   water: '#6890F0',
@@ -36,7 +39,7 @@ const typeColor = {
   dragon: '#7038F8',
   steel: '#B8B8D0',
   fairy: '#F0B6BC'
-}
+};
 
-const getTypeColor = (type) => typeColor[type] || '#A8A878'
+const getTypeColor = (type) => typeColors[type] || '#A8A878';
 </script>
