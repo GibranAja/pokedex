@@ -1,5 +1,13 @@
 <template>
   <v-container fluid class="pa-0" style="max-width: 1200px; margin: 0 auto">
+    <v-btn
+      color="secondary"
+      @click="$router.go(-1)"
+      prepend-icon="mdi-arrow-left"
+      size="large"
+      class="my-6 ml-4"
+      >Back</v-btn
+    >
     <v-card v-if="pokemon" :color="getTypeColor(pokemon.types[0].type.name)" class="ma-4">
       <v-row no-gutters>
         <v-col cols="12" md="4">
@@ -10,7 +18,7 @@
           ></v-img>
         </v-col>
         <v-col cols="12" md="8">
-          <v-card-title class="text-h4">{{ pokemon.name }}</v-card-title>
+          <v-card-title class="text-h4">{{ capitalizeFirstLetter(pokemon.name) }}</v-card-title>
           <v-card-subtitle>#{{ pokemon.id.toString().padStart(3, '0') }}</v-card-subtitle>
           <v-card-text>
             <v-row>
@@ -40,7 +48,7 @@
                   :key="ability.ability.name"
                   class="ma-1"
                 >
-                  {{ ability.ability.name }}
+                  {{ capitalizeFirstLetter(ability.ability.name) }}
                 </v-chip>
               </v-col>
             </v-row>
@@ -53,6 +61,7 @@
                   :model-value="stat.base_stat"
                   :color="getStatColor(stat.stat.name)"
                   height="25"
+                  style="border-radius: 15px"
                   striped
                 >
                   <template v-slot:default="{ value }">
@@ -73,6 +82,9 @@
         </v-col>
       </v-row>
     </v-card>
+    <div v-else class="d-flex justify-center mt-16">
+      <div class="loader"></div>
+    </div>
   </v-container>
 </template>
 
@@ -83,6 +95,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const pokemon = ref(null)
 const locations = ref([])
+const loading = ref(true)
 
 const typeColors = {
   normal: '#A8A878',
@@ -117,10 +130,20 @@ const statColors = {
 const getTypeColor = (type) => typeColors[type] || '#A8A878'
 const getStatColor = (stat) => statColors[stat] || '#A8A878'
 
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 const fetchPokemon = async () => {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${route.params.id}`)
-  pokemon.value = await response.json()
-  fetchPokemonLocation()
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${route.params.id}`)
+    pokemon.value = await response.json()
+    fetchPokemonLocation()
+  } catch (error) {
+    console.error('Failed to fetch pokemon data', error)
+  } finally {
+    loading.value = false
+  }
 }
 
 const fetchPokemonLocation = async () => {
@@ -131,3 +154,22 @@ const fetchPokemonLocation = async () => {
 
 onMounted(fetchPokemon)
 </script>
+
+<style scoped>
+.loader {
+  width: 124px;
+  height: 24px;
+  -webkit-mask:
+    conic-gradient(from 135deg at top, #0000, #000 0.5deg 90deg, #0000 90.5deg) 0 0,
+    conic-gradient(from -45deg at bottom, #0000, #000 0.5deg 90deg, #0000 90.5deg) 0 100%;
+  -webkit-mask-size: 25% 50%;
+  -webkit-mask-repeat: repeat-x;
+  background: linear-gradient(#25b09b 0 0) left/0% 100% no-repeat #ddd;
+  animation: l13 2s infinite linear;
+}
+@keyframes l13 {
+  100% {
+    background-size: 100% 100%;
+  }
+}
+</style>
