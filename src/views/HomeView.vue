@@ -75,13 +75,21 @@ const fetchPokemons = async () => {
     
     pokemons.value = await Promise.all(
       data.results.map(async (pokemon) => {
-        const res = await fetch(pokemon.url)
-        if (!res.ok) {
-          throw new Error(`Failed to fetch details for ${pokemon.name}. Status: ${res.status}`)
+        try {
+          const res = await fetch(pokemon.url)
+          if (!res.ok) {
+            throw new Error(`Failed to fetch details for ${pokemon.name}. Status: ${res.status}`)
+          }
+          const pokemonData = await res.json()
+          return pokemonData
+        } catch (err) {
+          console.error(`Error fetching details for ${pokemon.name}:`, err)
+          return null
         }
-        return res.json()
       })
     )
+    
+    pokemons.value = pokemons.value.filter(pokemon => pokemon !== null)
     
     console.log(`Successfully fetched ${pokemons.value.length} Pokemon`)
   } catch (err) {
@@ -93,8 +101,6 @@ const fetchPokemons = async () => {
       error.value = 'Received invalid data from the server. Please try again later.'
     } else if (err.message.includes('HTTP error')) {
       error.value = `Server error (${err.message}). Please try again later.`
-    } else if (err.message.includes('Failed to fetch details')) {
-      error.value = 'Failed to load details for some Pokemon. Please refresh the page.'
     } else {
       error.value = 'An unexpected error occurred. Please try again later.'
     }
