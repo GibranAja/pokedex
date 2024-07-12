@@ -6,6 +6,7 @@
       prepend-icon="mdi-arrow-left"
       size="large"
       class="my-6 ml-4"
+      variant="elevate"
       >Back</v-btn
     >
     <v-card v-if="pokemon" :color="getTypeColor(pokemon.types[0].type.name)" class="ma-4">
@@ -34,7 +35,7 @@
                   :key="type.type.name"
                   :color="getTypeColor(type.type.name)"
                   class="ma-1"
-                  text-color="white"
+                  :style="{ color: getTextColor(getTypeColor(type.type.name)) + ' !important' }"
                 >
                   {{ type.type.name }}
                 </v-chip>
@@ -129,6 +130,17 @@ const statColors = {
 
 const getTypeColor = (type) => typeColors[type] || '#A8A878'
 const getStatColor = (stat) => statColors[stat] || '#A8A878'
+
+const getTextColor = (backgroundColor) => {
+  const hex = backgroundColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  
+  return brightness > 128 ? 'white' : 'black';
+}
 
 const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1)
