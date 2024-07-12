@@ -1,4 +1,7 @@
 <template>
+  <div v-if="error">{{ error }}</div>
+  <div v-else-if="loading">Loading...</div>
+  <div v-else>
   <div class="background-wrapper">
     <svg class="background-shape top-left" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -42,6 +45,7 @@
     </v-container>
   </div>
   <FooterComponent />
+</div>
 </template>
 
 <script setup>
@@ -54,21 +58,52 @@ const pokemons = ref([])
 const searchQuery = ref('')
 const visiblePokemonsCount = ref(40)
 const loading = ref(true)
+const error = ref([])
 
 const fetchPokemons = async () => {
+  loading.value = true
+  error.value = null
+  
   try {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1100')
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
     const data = await response.json()
+    
     pokemons.value = await Promise.all(
       data.results.map(async (pokemon) => {
         const res = await fetch(pokemon.url)
+        if (!res.ok) {
+          throw new Error(`Failed to fetch details for ${pokemon.name}. Status: ${res.status}`)
+        }
         return res.json()
       })
     )
-    console.log('Semua data Pokemon berhasil diambil:', pokemons.value)
-    console.log('Jumlah Pokemon yang diambil:', pokemons.value.length)
-  } catch (error) {
-    console.error('Failed to fetch pokemons', error)
+    
+    console.log(`Successfully fetched ${pokemons.value.length} Pokemon`)
+  } catch (err) {
+    console.error('Failed to fetch pokemons', err)
+    
+    if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
+      error.value = 'Network error. Please check your internet connection and try again.'
+    } else if (err instanceof SyntaxError) {
+      error.value = 'Received invalid data from the server. Please try again later.'
+    } else if (err.message.includes('HTTP error')) {
+      error.value = `Server error (${err.message}). Please try again later.`
+    } else if (err.message.includes('Failed to fetch details')) {
+      error.value = 'Failed to load details for some Pokemon. Please refresh the page.'
+    } else {
+      error.value = 'An unexpected error occurred. Please try again later.'
+    }
+    
+    console.error('Detailed error information:', {
+      message: err.message,
+      stack: err.stack,
+      type: err.name
+    })
   } finally {
     loading.value = false
   }
