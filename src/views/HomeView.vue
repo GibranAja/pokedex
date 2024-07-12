@@ -1,21 +1,46 @@
 <template>
-  <v-container fluid class="pa-0" style="max-width: 1200px; margin: 0 auto">
-    <div class="d-flex justify-center mt-7">
-      <img src="../assets/Pokemon-removebg-preview.png" alt="Pokemon Logo" class="logo" />
-    </div>
-    <SearchBar class="d-flex justify-center mt-5" @search="searchPokemon"></SearchBar>
-    <div v-if="loading" class="d-flex justify-center mt-5">
-      <div class="loader"></div>
-    </div>
-    <div v-else>
-      <PokemonGrid :pokemons="visiblePokemons"></PokemonGrid>
-      <div class="d-flex justify-center mb-6 mt-4">
-        <v-btn @click="loadMorePokemons" v-if="showLoadMore" color="orange" class="text-white" size="x-large"
-          >Load More</v-btn
-        >
+  <div class="background-wrapper">
+    <svg class="background-shape top-left" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="#FF0066"
+        d="M47.5,-51.2C59.8,-37.7,67.3,-18.9,67.1,-0.2C66.9,18.5,59,37,45.4,50.2C31.8,63.4,15.9,71.3,-1.9,73.2C-19.7,75.1,-39.4,71,-54.4,58.3C-69.4,45.6,-79.7,24.4,-79.9,3C-80.1,-18.3,-70.1,-36.6,-55.3,-50.1C-40.5,-63.6,-20.2,-72.3,-0.6,-71.7C19.1,-71.1,38.2,-61.1,47.5,-51.2Z"
+        transform="translate(100 100)"
+      />
+    </svg>
+    <svg
+      class="background-shape bottom-right"
+      viewBox="0 0 200 200"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="#FFD700"
+        d="M38.1,-47.8C50.9,-31.5,63.6,-20.9,68.2,-6.7C72.8,7.5,69.3,25.4,59.5,38.9C49.7,52.4,33.6,61.5,15.3,67.2C-2.9,72.9,-23.4,75.2,-39.3,67.4C-55.2,59.6,-66.5,41.6,-71.9,22.2C-77.4,2.8,-77,-17.9,-67.6,-34.6C-58.2,-51.3,-39.8,-63.9,-22.8,-67.7C-5.8,-71.5,9.8,-66.4,38.1,-47.8Z"
+        transform="translate(100 100)"
+      />
+    </svg>
+    <v-container fluid class="pa-0" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
+      <div class="d-flex justify-center mt-7">
+        <img src="../assets/Pokemon-removebg-preview.png" alt="Pokemon Logo" class="logo" />
       </div>
-    </div>
-  </v-container>
+      <SearchBar class="d-flex justify-center mt-5" @search="searchPokemon"></SearchBar>
+      <div v-if="loading" class="d-flex justify-center mt-5">
+        <div class="loader"></div>
+      </div>
+      <div v-else>
+        <PokemonGrid :pokemons="visiblePokemons"></PokemonGrid>
+        <div class="d-flex justify-center mb-6 mt-4">
+          <v-btn
+            @click="loadMorePokemons"
+            v-if="showLoadMore"
+            color="orange"
+            class="text-white load-more-btn"
+            size="x-large"
+            >Load More</v-btn
+          >
+        </div>
+      </div>
+    </v-container>
+  </div>
 </template>
 
 <script setup>
@@ -38,6 +63,8 @@ const fetchPokemons = async () => {
         return res.json()
       })
     )
+    console.log('Semua data Pokemon berhasil diambil:', pokemons.value)
+    console.log('Jumlah Pokemon yang diambil:', pokemons.value.length)
   } catch (error) {
     console.error('Failed to fetch pokemons', error)
   } finally {
@@ -79,6 +106,66 @@ const loadMorePokemons = () => {
 </script>
 
 <style scoped>
+.background-wrapper {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.background-shape {
+  position: fixed;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.top-left {
+  top: -50px;
+  left: -50px;
+  width: 300px;
+  height: 300px;
+}
+
+.bottom-right {
+  bottom: -50px;
+  right: -50px;
+  width: 300px;
+  height: 300px;
+}
+
+@media (max-width: 600px) {
+  .top-left, .bottom-right {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .top-left, .bottom-right {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+.v-container {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.logo {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+}
+
+.load-more-btn {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  z-index: 2;
+  position: relative;
+}
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 124px;
