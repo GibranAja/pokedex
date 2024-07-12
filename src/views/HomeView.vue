@@ -41,12 +41,14 @@
       </div>
     </v-container>
   </div>
+  <FooterComponent />
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import SearchBar from '../components/SearchBar.vue'
 import PokemonGrid from '../components/PokemonGrid.vue'
+import FooterComponent from '@/components/FooterComponent.vue';
 
 const pokemons = ref([])
 const searchQuery = ref('')
