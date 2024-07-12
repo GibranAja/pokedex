@@ -1,6 +1,6 @@
 <template>
   <div v-if="error">{{ error }}</div>
-  <div v-else-if="loading">Loading...</div>
+  <div v-else-if="loader"></div>
   <div v-else>
   <div class="background-wrapper">
     <svg class="background-shape top-left" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
