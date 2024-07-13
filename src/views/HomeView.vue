@@ -220,6 +220,7 @@ const loadMorePokemons = () => {
   -webkit-mask-repeat: repeat-x;
   background: linear-gradient(#25b09b 0 0) left/0% 100% no-repeat #ddd;
   animation: l13 2s infinite linear;
+  margin-bottom: 40px;
 }
 @keyframes l13 {
   100% {
