@@ -65,7 +65,7 @@ const fetchPokemons = async () => {
   error.value = null
   
   try {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1100')
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1200')
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
