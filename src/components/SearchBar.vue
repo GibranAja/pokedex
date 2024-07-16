@@ -26,6 +26,7 @@ const handleKeyDown = (event) => {
   if (event.ctrlKey && event.key === '/') {
     event.preventDefault()
     searchInput.value.focus()
+    
   }
 }
 
