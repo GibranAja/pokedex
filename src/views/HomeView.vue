@@ -125,18 +125,25 @@ const fetchPokemons = async () => {
 
 onMounted(fetchPokemons)
 
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 const searchPokemon = (query) => {
   searchQuery.value = query
   visiblePokemonsCount.value = 40
 }
 
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
 const filteredPokemons = computed(() => {
+  const lowercaseQuery = searchQuery.value.toLowerCase()
   return pokemons.value
-    .filter((pokemon) => pokemon.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .filter((pokemon) => {
+      return (
+        pokemon.name.toLowerCase().includes(lowercaseQuery) ||
+        pokemon.id.toString().includes(lowercaseQuery) ||
+        pokemon.types.some((type) => type.type.name.toLowerCase().includes(lowercaseQuery))
+      )
+    })
     .map((pokemon) => ({
       ...pokemon,
       name: capitalizeFirstLetter(pokemon.name)
