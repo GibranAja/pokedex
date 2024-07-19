@@ -3,11 +3,11 @@
     <v-text-field
       ref="searchInput"
       v-model="searchQuery"
-      label="Search Pokemon"
-      @input="$emit('search', searchQuery)"
+      label="Search Pokemon by name, ID, or element"
+      @input="emitSearch"
       prepend-inner-icon="mdi-magnify"
       class="mt-5"
-      style="max-width: 250px"
+      style="max-width: 300px"
       outlined
       dense
     ></v-text-field>
@@ -20,7 +20,11 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const searchQuery = ref('')
 const searchInput = ref(null)
 
-defineEmits(['search'])
+const emit = defineEmits(['search'])
+
+const emitSearch = () => {
+  emit('search', searchQuery.value)
+}
 
 const handleKeyDown = (event) => {
   if (event.ctrlKey && event.key === '/') {
