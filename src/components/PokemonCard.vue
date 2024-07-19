@@ -9,16 +9,18 @@
   >
     <v-img :src="pokemon.sprites.front_default" height="150"></v-img>
     <v-card-title>{{ pokemon.name }}</v-card-title>
-    <v-card-subtitle class="text-center">#{{ pokemon.id.toString().padStart(3, '0') }}</v-card-subtitle>
+    <v-card-subtitle class="text-center"
+      >#{{ pokemon.id.toString().padStart(3, '0') }}</v-card-subtitle
+    >
   </v-card>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 
-defineProps(['pokemon']);
-useRouter();
+defineProps(['pokemon'])
+useRouter()
 
 const typeColors = {
   normal: '#A8A878',
@@ -39,7 +41,7 @@ const typeColors = {
   dragon: '#7038F8',
   steel: '#B8B8D0',
   fairy: '#F0B6BC'
-};
+}
 
-const getTypeColor = (type) => typeColors[type] || '#A8A878';
+const getTypeColor = (type) => typeColors[type] || '#A8A878'
 </script>
