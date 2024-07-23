@@ -14,7 +14,7 @@ export default {
 
 <style>
 body {
-  font-family: 'Poppins';
+  font-family: 'Poppins', 'Verdana';
 }
 ::-webkit-scrollbar {
   background: transparent;
