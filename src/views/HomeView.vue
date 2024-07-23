@@ -246,3 +246,4 @@ const loadMorePokemons = () => {
   }
 }
 </style>
+git status
