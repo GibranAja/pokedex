@@ -135,14 +135,19 @@ const searchPokemon = (query) => {
 }
 
 const filteredPokemons = computed(() => {
-  const searchTerms = searchQuery.value.toLowerCase().split(',').map(tipe => tipe.trim())
-  
+  const searchTerms = searchQuery.value
+    .toLowerCase()
+    .split(',')
+    .map((tipe) => tipe.trim())
+
   return pokemons.value
     .filter((pokemon) => {
-      return searchTerms.every(term => {
-        return pokemon.name.toLowerCase().includes(term) ||
-               pokemon.id.toString().includes(term) ||
-               pokemon.types.some(type => type.type.name.toLowerCase().includes(term))
+      return searchTerms.every((term) => {
+        return (
+          pokemon.name.toLowerCase().includes(term) ||
+          pokemon.id.toString().includes(term) ||
+          pokemon.types.some((type) => type.type.name.toLowerCase().includes(term))
+        )
       })
     })
     .map((pokemon) => ({
